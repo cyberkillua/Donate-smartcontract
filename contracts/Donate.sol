@@ -1,23 +1,32 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.8;
 
 error Donate__NotEnoughETHDonated();
+error Donate__NotOwner();
 
 contract Donate {
-    /* STATE VARIABLES */
-    uint256 private constant MINIMUM_DONATION = 0;
-    uint256 private immutable i_amountDonated;
+    /* DONATION VARIABLES */
+    uint256 private immutable i_minimumDonation;
     address payable[] private s_donors;
+    address immutable i_owner;
+    uint256 private s_totalAmountDonated;
 
-    constructor(uint256 amountDonated) {
-        i_amountDonated = amountDonated;
+    modifier onlyOwner() {
+        if (msg.sender != i_owner) revert Donate__NotOwner();
+        _;
+    }
+
+    constructor(uint256 minimumDonation) {
+        i_owner = msg.sender;
+        i_minimumDonation = minimumDonation;
     }
 
     function donate() public payable {
-        if (msg.value < MINIMUM_DONATION) {
+        if (msg.value < i_minimumDonation) {
             revert Donate__NotEnoughETHDonated();
         }
         s_donors.push(payable(msg.sender));
+        s_totalAmountDonated = address(this).balance;
     }
 
     function withdraw() public payable {
@@ -30,15 +39,15 @@ contract Donate {
     }
 
     /* GETTERS */
-    function getMinimumDonation() public pure returns (uint256) {
-        return MINIMUM_DONATION;
-    }
-
-    function getAmountDonated() public view returns (uint256) {
-        return i_amountDonated;
+    function getMinimumDonation() public view returns (uint256) {
+        return i_minimumDonation;
     }
 
     function getDonor(uint256 index) public view returns (address) {
         return s_donors[index];
+    }
+
+    function getTotalDonation() public view returns (uint256) {
+        return s_totalAmountDonated;
     }
 }

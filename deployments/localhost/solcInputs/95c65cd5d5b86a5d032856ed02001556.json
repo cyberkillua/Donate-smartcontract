@@ -1,0 +1,35 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/Donate.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.8;\n\nerror Donate__NotEnoughETHDonated();\nerror Donate__NotOwner();\n\ncontract Donate {\n    /* DONATION VARIABLES */\n    uint256 private immutable i_minimumDonation;\n    address payable[] private s_donors;\n    address immutable i_owner;\n    uint256 private s_totalAmountDonated;\n\n    modifier onlyOwner() {\n        if (msg.sender != i_owner) revert Donate__NotOwner();\n        _;\n    }\n\n    constructor(uint256 minimumDonation) {\n        i_owner = msg.sender;\n        i_minimumDonation = minimumDonation;\n    }\n\n    function donate() public payable {\n        if (msg.value < i_minimumDonation) {\n            revert Donate__NotEnoughETHDonated();\n        }\n        s_donors.push(payable(msg.sender));\n        s_totalAmountDonated = address(this).balance;\n    }\n\n    function withdraw() public payable {\n        // sends all entire balance to the caller\n\n        (bool callSuccess, ) = payable(msg.sender).call{\n            value: address(this).balance\n        }(\"\");\n        require(callSuccess, \"Call failed\");\n    }\n\n    /* GETTERS */\n    function getMinimumDonation() public view returns (uint256) {\n        return i_minimumDonation;\n    }\n\n    function getDonor(uint256 index) public view returns (address) {\n        return s_donors[index];\n    }\n\n    function getTotalDonation() public view returns (uint256) {\n        return s_totalAmountDonated;\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
