@@ -13,10 +13,10 @@ const chainId = network.config.chainId;
 !developmentChains.includes(network.name)
   ? describe.skip
   : describe("Donate", async function () {
-      let deployer, donate;
+      let deployer, donate, accounts;
 
       beforeEach(async function () {
-        const accounts = await ethers.getSigners();
+        accounts = await ethers.getSigners();
         deployer = accounts[0];
         await deployments.fixture(["all"]);
         const DonateContract = await deployments.get("Donate");
@@ -43,6 +43,15 @@ const chainId = network.config.chainId;
           await donate.donate({ value: amountDonated });
           const donor = await donate.getDonor(0);
           assert.equal(donor, deployer.address);
+        });
+      });
+
+      describe("withdraw", async function () {
+        it("can only be withdrawn but owner of contract", async function () {
+          const donateConnectedContract = await donate.connect(accounts[1]);
+          await expect(donateConnectedContract.withdraw()).to.be.rejectedWith(
+            "Donate__NotOwner"
+          );
         });
       });
     });

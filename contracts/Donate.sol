@@ -29,7 +29,7 @@ contract Donate {
         s_totalAmountDonated = address(this).balance;
     }
 
-    function withdraw() public payable {
+    function withdraw() public onlyOwner {
         // sends all entire balance to the caller
 
         (bool callSuccess, ) = payable(msg.sender).call{
