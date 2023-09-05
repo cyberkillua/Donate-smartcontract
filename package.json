@@ -6,15 +6,21 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "npx hardhat compile",
+    "format": "prettier --write .",
     "local:node": "npx hardhat node",
     "deploy:local": "npx hardhat run --network localhost scripts/01-deploy-donate.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.4",
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
     "eslint": "^8.48.0",
-    "hardhat": "^2.17.1"
+    "ethers": "^6.7.1",
+    "hardhat": "^2.17.1",
+    "hardhat-deploy": "^0.11.37",
+    "prettier-plugin-solidity": "^1.0.0-beta.19",
+    "solhint": "^3.3.7"
   },
   "dependencies": {
     "dotenv": "^16.3.1"

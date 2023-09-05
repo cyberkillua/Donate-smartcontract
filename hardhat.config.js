@@ -1,7 +1,7 @@
-require("@nomicfoundation/hardhat-toolbox");
-require("hardhat-deploy");
-
-require("dotenv").config();
+require('@nomicfoundation/hardhat-toolbox');
+require('hardhat-deploy');
+require("@nomicfoundation/hardhat-ethers");
+require('dotenv').config();
 
 const SEPOLIA_URL = process.env.SEPOLIA_URL;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
@@ -9,8 +9,8 @@ const API_KEY = process.env.ETHER_API_KEY;
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.8",
-  defaultNetwork: "hardhat",
+  solidity: '0.8.8',
+  defaultNetwork: 'hardhat',
   networks: {
     hardhat: {
       chainId: 31337,
@@ -23,7 +23,7 @@ module.exports = {
       blockConfirmations: 6,
     },
     localhost: {
-      url: "http://127.0.0.1:8545/",
+      url: 'http://127.0.0.1:8545/',
       chainId: 31337,
     },
   },
